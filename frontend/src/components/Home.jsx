@@ -1,0 +1,838 @@
+import React, { useState, useEffect } from 'react';
+// import LottieAnimation from './LottieAnimation';
+import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Search, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "./ui/Button";
+import { Check, Shield, Clock, PiggyBank } from 'lucide-react';
+import { Star } from 'lucide-react';
+import { 
+  Laptop, 
+  Bike, 
+  Shirt, 
+  BookOpen, 
+  Home as HomeIcon, 
+  Camera, 
+  Car, 
+  PenTool, 
+  Sofa,
+  Facebook, 
+  Twitter, 
+  Instagram, 
+  Linkedin, 
+  Mail, 
+  Phone, 
+  MapPin,
+  Gem,
+  Dumbbell,Trophy,
+  Fan,
+  Boxes 
+} from "lucide-react";
+
+// Import hero images
+import heroSlide1 from '../assets/hero-slide-1.png';
+
+// Carousel Component
+const Carousel = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
+  
+  const slides = [
+    {
+      image: heroSlide1,
+      title: "Rent Anything,",
+      titleAccent: "Anytime",
+      description: "From electronics to furniture, find what you need without the commitment of ownership.",
+      buttonText: "Browse Items",
+    },
+    {
+      image: "https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&q=80&w=1992",
+      title: "Find What You Need,",
+      titleAccent: "Locally",
+      description: "Connect with people in your area who have the items you're looking for.",
+      buttonText: "Browse Items",
+    },
+    {
+      image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&q=80&w=2070",
+      title: "List Your Items,",
+      titleAccent: "Earn Extra",
+      description: "Turn your unused items into income. Set your own prices and availability.",
+      buttonText: "Start Listing",
+    },
+  ];
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      nextSlide();
+    }, 6000);
+    
+    return () => clearInterval(timer);
+  }, []);
+
+  // Function to scroll to categories section
+  const scrollToCategories = () => {
+    const categoriesSection = document.getElementById('categories');
+    if (categoriesSection) {
+      categoriesSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleButtonClick = (buttonText) => {
+    if (buttonText === "Start Listing") {
+      navigate('/rental');
+    } else {
+      scrollToCategories();
+    }
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  return (
+    <section className="relative h-[90vh] min-h-[600px] max-h-[800px] w-full overflow-hidden">
+      {/* Slides */}
+      <div className="relative w-full h-full">
+        {slides.map((slide, index) => (
+          <div 
+            key={index}
+            className={`absolute inset-0 h-full w-full transition-opacity duration-700 ease-in-out ${
+              index === currentSlide ? "opacity-100" : "opacity-0 pointer-events-none"
+            }`}
+          >
+            {/* Dark gradient overlay for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30 z-10"></div>
+            <img 
+              src={slide.image} 
+              alt={slide.title} 
+              className="h-full w-full object-cover"
+              loading={index === 0 ? "eager" : "lazy"}
+            />
+          </div>
+        ))}
+        
+        {/* Static Content (doesn't change with slides for smoother UX) */}
+        <div className="absolute inset-0 z-20 flex items-center">
+          <div className="container mx-auto px-6 lg:px-12">
+            <div className="max-w-xl text-white">
+              {/* Headline */}
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-2 leading-tight">
+                {slides[currentSlide].title}
+              </h1>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight text-[#5BC0EB]">
+                {slides[currentSlide].titleAccent}
+              </h1>
+              
+              {/* Description */}
+              <p className="text-base md:text-lg text-gray-200 mb-8 max-w-md leading-relaxed">
+                {slides[currentSlide].description}
+              </p>
+              
+              {/* Search Bar */}
+              <div className="bg-white rounded-xl p-2 shadow-2xl max-w-lg mb-6">
+                <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2">
+                  <div className="flex-1 flex items-center px-4 py-3 bg-gray-50 rounded-lg">
+                    <Search className="text-gray-400 mr-3 flex-shrink-0" size={20} />
+                    <input
+                      type="text"
+                      placeholder="Search items to rent near you..."
+                      className="bg-transparent w-full outline-none text-gray-700 placeholder-gray-400 text-base"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="bg-[#1399c6] hover:bg-[#1171ba] text-white rounded-lg px-6 py-3 font-semibold transition-colors flex items-center justify-center gap-2"
+                  >
+                    Search
+                    <ArrowRight size={18} />
+                  </button>
+                </form>
+              </div>
+              
+              {/* CTA */}
+              <div className="flex flex-wrap items-center gap-4">
+                <button
+                  onClick={() => navigate('/rental')}
+                  className="text-white/80 hover:text-white font-medium transition-colors flex items-center gap-2 group"
+                >
+                  List an Item
+                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Left Navigation Arrow */}
+      <button 
+        onClick={prevSlide}
+        className="absolute left-4 lg:left-8 top-1/2 transform -translate-y-1/2 z-30 w-12 h-12 rounded-full border-2 border-white/40 hover:border-white hover:bg-white/10 transition-all duration-200 flex items-center justify-center"
+        aria-label="Previous slide"
+      >
+        <ChevronLeft className="w-6 h-6 text-white" />
+      </button>
+      
+      {/* Right Navigation Arrow */}
+      <button 
+        onClick={nextSlide}
+        className="absolute right-4 lg:right-8 top-1/2 transform -translate-y-1/2 z-30 w-12 h-12 rounded-full border-2 border-white/40 hover:border-white hover:bg-white/10 transition-all duration-200 flex items-center justify-center"
+        aria-label="Next slide"
+      >
+        <ChevronRight className="w-6 h-6 text-white" /> 
+      </button>
+      
+      {/* Indicator dots */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30 flex space-x-3">
+        {slides.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentSlide(index)}
+            className={`h-3 rounded-full transition-all duration-300 ${
+              index === currentSlide ? "w-8 bg-white" : "w-3 bg-white/40 hover:bg-white/60"
+            }`}
+            aria-label={`Go to slide ${index + 1}`}
+          />
+        ))}
+      </div>
+    </section>
+  );
+};
+
+// Categories Component
+const categories = [
+  {
+    title: "Electronics & Appliance",
+    icon: <Laptop size={40} />,
+    color: "#1399c6",       // Light Blue
+    hoverColor: "#1171ba",  // Blue
+    subcategories: ["Laptops", "Smartphones", "Audio Equipment", "Gaming Consoles", "Cameras", "Drones", "Tablets", "Smart Watches"]
+  },
+  {
+    title: "Bikes",
+    icon: <Bike size={40} />,
+    color: "#24aae2",
+    hoverColor: "#1399c6",
+    subcategories: ["Mountain Bikes", "Road Bikes", "Electric Bikes", "BMX", "Hybrid Bikes", "Cruisers", "Kids Bikes"]
+  },
+  {
+    title: "Clothing Fashion",
+    icon: <Shirt size={40} />,
+    color: "#1171ba",
+    hoverColor: "#0e8c7f",
+    subcategories: ["Men's Clothing", "Women's Clothing", "Jewelry", "Watches", "Bags", "Accessories", "Shoes", "Formal Wear"]
+  },
+  {
+    title: "Fashion jewelry",
+    icon: <Gem size={40} />,
+    color: "#0e8c7f",
+    hoverColor: "#1399c6",
+    subcategories: ["Notebooks", "Pens & Pencils", "Art Supplies", "Office Equipment", "Planners", "Desk Accessories"]
+  },
+  {
+    title: "Furniture",
+    icon: <Sofa size={40} />,
+    color: "#096192",
+    hoverColor: "#0e8c7f",
+    subcategories: ["Sofas", "Beds", "Dining Tables", "Office Furniture", "Outdoor Furniture", "Chairs", "Storage Units"]
+  },
+  {
+    title: "Books",
+    icon: <BookOpen size={40} />,
+    color: "#1399c6",
+    hoverColor: "#1171ba",
+    subcategories: ["DSLR", "Mirrorless", "Action Cameras", "Video Equipment", "Lenses", "Lighting", "Tripods"]
+  },
+  {
+    title: "Home Appliances",
+    icon: <HomeIcon size={40} />,
+    color: "#1171ba",
+    hoverColor: "#0e8c7f",
+    subcategories: ["Cars", "Motorcycles", "Vans", "Trucks", "RVs", "Boats", "Scooters", "Luxury Vehicles"]
+  },
+  {
+    title: "Sports Equipment",
+    icon: <Dumbbell size={40} />,
+    color: "#24aae2",
+    hoverColor: "#1399c6",
+    subcategories: ["Fiction", "Non-Fiction", "Academic", "Children's Books", "Comics", "Magazines", "Reference"]
+  },
+  {
+    title: "General",
+    icon: <Boxes size={40} />,
+    color: "#0e8c7f",
+    hoverColor: "#1399c6",
+    subcategories: ["Apartments", "Houses", "Office Spaces", "Commercial Property", "Vacation Rentals", "Event Venues"]
+  },
+];
+
+const CategoryCard = ({ title, icon, color, hoverColor, navigate}) => {
+  return (
+    <div className="relative group overflow-hidden h-48">
+      <div
+        className="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-md border border-gray-100 
+                  hover:shadow-lg transition-all duration-300 h-full hover:-translate-y-1"
+        style={{
+          borderColor: 'transparent',
+          cursor: 'pointer'
+        }}
+        onClick={() => navigate(`/category/${encodeURIComponent(title.toLowerCase())}`)}
+      >
+        <div
+          className="p-4 rounded-full mb-4 transition-colors duration-300"
+          style={{
+            backgroundColor: `${color}1A`, // ~10% opacity
+            color: color,
+          }}
+        >
+          <span className="group-hover:transition-colors">{icon}</span>
+        </div>
+        <h3
+          className="text-lg font-semibold transition-colors duration-300 group-hover:text-black"
+          style={{
+            color: color,
+          }}
+        >
+          {title}
+        </h3>
+        <div
+          className="absolute bottom-0 left-0 w-full h-1 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+          style={{
+            backgroundColor: hoverColor,
+          }}
+        ></div>
+      </div>
+    </div>
+  );
+};
+
+const Categories = () => {
+  const navigate = useNavigate();
+  
+  return (
+    <section id="categories" className="py-16 px-6 bg-gray-50">
+      <div className="container mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-3">
+            Browse by <span style={{ color: '#1399c6' }}>Categories</span>
+          </h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Discover the perfect rental from our wide selection of categories. Whether you need it for a day or a month, we've got you covered.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+          {categories.map((category, index) => (
+            <CategoryCard 
+              key={index}
+              {...category}
+              navigate={navigate}
+            />
+          ))}
+        </div>
+      </div>      
+    </section>
+  );
+};
+
+const Recommendations = () => {
+  const navigate = useNavigate();
+  const [recommendations, setRecommendations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      try {
+        // Use the correct endpoint with credentials
+        const response = await fetch('http://localhost:5000/recommendations/popular', { 
+          credentials: 'include' // This is better than withCredentials
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch recommendations');
+        }
+        
+        const data = await response.json();
+        console.log("Fetched recommendations:", data); // Debugging log
+        setRecommendations(data);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+        console.error('Recommendation fetch error:', err);
+      }
+    };
+
+    fetchRecommendations();
+  }, []);
+
+  // Navigate to product detail page
+  const handleProductClick = (productId) => {
+    navigate(`/product/${productId}`);
+  };
+
+  if (loading) {
+    return <div className="text-center py-8">Loading recommendations...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center py-8 text-red-500">Error: {error}</div>;
+  }
+
+  if (recommendations.length === 0) {
+    return <div className="text-center py-8">No recommendations available.</div>;
+  }
+
+  return (
+    <section className="py-12 bg-gray-50">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl font-bold text-center mb-8"><span style={{ color: '#1399c6' }}>Recommended</span> For You</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {recommendations.map((product) => (
+            <div
+              key={product._id}
+              className="bg-white rounded-lg w-96 shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border border-gray-100"
+              onClick={() => handleProductClick(product._id)}
+            >
+              {product.productImage ? (
+                <div className="h-48 bg-gray-200" >
+                  <img
+                    src={product.productImage}
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // console.error("Image failed to load:");
+                      e.target.onerror = null; // Prevent infinite loop
+                      e.target.src = 'https://via.placeholder.com/400?text=No+Image';
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="h-48 bg-gray-200 flex items-center justify-center">
+                  <span className="text-gray-400">No image available</span>
+                </div>
+              )}
+              <div className="p-4">
+                <h3 className="font-bold text-2xl mb-1 ">
+                  {product.name}
+                </h3>
+                <div className="text-sm text-gray-500 mb-2">
+                  {product.category}
+                </div>
+                <div className="text-blue-600 font-bold">
+                  ₹{product.price}/day
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// BrandHighlight Component
+const BrandHighlight = () => {
+  return (
+    <section className="py-24 relative overflow-hidden">
+      {/* Background pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute -top-24 -left-24 w-64 h-64 rounded-full bg-[#AEE9F7]"></div>
+        <div className="absolute top-1/2 -right-32 w-96 h-96 rounded-full bg-[#2AB3E6]"></div>
+        <div className="absolute -bottom-20 left-1/4 w-72 h-72 rounded-full bg-[#00B3A4]"></div>
+      </div>
+
+      <div className="container mx-auto px-6 relative">
+        <div className="text-center max-w-4xl mx-auto">
+          <h2 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-[#AEE9F7] via-[#2AB3E6] to-[#016D6D] bg-clip-text text-transparent">
+            RentEasy
+          </h2>
+          <div className="h-1 w-24 bg-gradient-to-r from-[#AEE9F7] via-[#2AB3E6] to-[#016D6D] mx-auto mb-6 rounded-full"></div>
+          <p className="text-xl md:text-2xl text-gray-600 mb-8">
+            Your Smart Rental Companion
+          </p>
+          <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+            
+            <div className="flex items-center bg-white shadow-md rounded-xl p-4 px-6">
+              <div className="text-3xl font-bold text-[#1399c6] mr-3">10k+</div>
+              <div className="text-sm text-gray-600">Active Listings</div>
+            </div>
+            
+            <div className="flex items-center bg-white shadow-md rounded-xl p-4 px-6">
+              <div className="text-3xl font-bold text-[#016D6D] mr-3">50+</div>
+              <div className="text-sm text-gray-600">Cities Covered</div>
+            </div>
+            
+            <div className="flex items-center bg-white shadow-md rounded-xl p-4 px-6">
+              <div className="text-3xl font-bold text-[#00B3A4] mr-3">5k+</div>
+              <div className="text-sm text-gray-600">Happy Renters</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// AboutUs Component
+const AboutUs = () => {
+  return (
+    <section id="about" className="py-16 bg-white">
+      <div className="container mx-auto px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          {/* Image side */}
+          <div className="relative">
+            <div className="rounded-2xl overflow-hidden shadow-xl">
+              <img 
+                src="https://images.unsplash.com/photo-1721322800607-8c38375eef04?auto=format&fit=crop&q=80&w=1770&ixlib=rb-4.0.3" 
+                alt="People using RentEasy" 
+                className="w-full h-auto"
+              />
+            </div>
+            <div className="absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-lg animate-fade-in">
+            <div className="flex space-x-2">
+  <div className="w-2 h-2 rounded-full bg-[#1399c6]"></div>
+  <div className="w-2 h-2 rounded-full bg-[#2AB3E6]"></div>
+  <div className="w-2 h-2 rounded-full bg-[#016D6D]"></div>
+</div>
+              <p className="font-medium text-gray-700 mt-1">Trusted by thousands</p>
+            </div>
+          </div>
+          
+          {/* Text side */}
+          <div className="space-y-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+              About <span style={{ color: '#1399c6' }}>RentEasy</span>
+            </h2>
+            <p className="text-gray-600 text-lg">
+              RentEasy is revolutionizing the way people access the items they need. Our platform connects those who want to rent with those who have items to offer, creating a community of sharing that reduces waste and increases accessibility.
+            </p>
+            <p className="text-gray-600 text-lg">
+              Founded in 2023, we've quickly grown to become the most trusted rental marketplace in the region, with a commitment to quality, security, and exceptional user experience.
+            </p>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+  <div className="flex items-start space-x-3">
+    <div className="bg-[#2AB3E6]/10 p-2 rounded-lg">
+      <Check className="text-[#2AB3E6] w-5 h-5" />
+    </div>
+    <div>
+      <h4 className="font-semibold text-gray-800">Verified Renters</h4>
+      <p className="text-gray-600 text-sm">All users are ID verified</p>
+    </div>
+  </div>
+
+  <div className="flex items-start space-x-3">
+    <div className="bg-[#2AB3E6]/10 p-2 rounded-lg">
+      <Shield className="text-[#2AB3E6] w-5 h-5" />
+    </div>
+    <div>
+      <h4 className="font-semibold text-gray-800">Secure Payments</h4>
+      <p className="text-gray-600 text-sm">Protected transactions</p>
+    </div>
+  </div>
+
+  <div className="flex items-start space-x-3">
+    <div className="bg-[#00B3A4]/10 p-2 rounded-lg">
+      <Clock className="text-[#00B3A4] w-5 h-5" />
+    </div>
+    <div>
+      <h4 className="font-semibold text-gray-800">Flexible Durations</h4>
+      <p className="text-gray-600 text-sm">Rent for days or months</p>
+    </div>
+  </div>
+
+  <div className="flex items-start space-x-3">
+    <div className="bg-[#016D6D]/10 p-2 rounded-lg">
+      <PiggyBank className="text-[#016D6D] w-5 h-5" />
+    </div>
+    <div>
+      <h4 className="font-semibold text-gray-800">Save Money</h4>
+      <p className="text-gray-600 text-sm">More affordable than buying</p>
+    </div>
+  </div>
+{/* </div> */}
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+
+// Testimonials Component
+const testimonials = [
+  {
+    name: "Sarah Johnson",
+    title: "Photographer",
+    image: "https://randomuser.me/api/portraits/women/44.jpg",
+    rating: 5,
+    text: "RentEasy helped me rent high-end camera equipment for my shoots without breaking the bank. The process was smooth, and the equipment was in perfect condition!"
+  },
+  {
+    name: "Michael Chen",
+    title: "Graduate Student",
+    image: "https://randomuser.me/api/portraits/men/32.jpg",
+    rating: 5,
+    text: "As a student, buying all the books I need would cost a fortune. RentEasy lets me rent textbooks for the semester at a fraction of the cost. Game changer!"
+  },
+  {
+    name: "Priya Patel",
+    title: "Event Planner",
+    image: "https://randomuser.me/api/portraits/women/63.jpg",
+    rating: 4,
+    text: "I regularly rent decor items for events through RentEasy. The variety is impressive, and the rental process is hassle-free. Highly recommend!"
+  }
+];
+
+const TestimonialCard = ({ name, title, image, rating, text }) => {
+  return (
+    <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100 hover:shadow-lg transition-shadow h-full flex flex-col w-[300px]">
+      <div className="flex items-center mb-4">
+        <img
+          src={image}
+          alt={name}
+          className="w-12 h-12 rounded-full border-2 border-rent-light-blue object-cover mr-4"
+        />
+        <div>
+          <h4 className="font-semibold text-gray-800">{name}</h4>
+          <p className="text-gray-500 text-sm">{title}</p>
+        </div>
+      </div>
+      
+      <div className="flex mb-4">
+        {[...Array(5)].map((_, i) => (
+          <Star
+            key={i}
+            size={16}
+            className={i < rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}
+          />
+        ))}
+      </div>
+      
+      <p className="text-gray-600 flex-grow">{text}</p>
+    </div>
+  );
+};
+
+const Testimonials = () => {
+  // Duplicate testimonials for seamless loop
+  const scrollingTestimonials = [...testimonials, ...testimonials, ...testimonials];
+
+  return (
+    <section
+      id="testimonials"
+      className="py-16 px-6 overflow-hidden"
+      style={{
+        background: "linear-gradient(to bottom, white, #1399c610, white)",
+      }}
+    >
+      <div className="text-center mb-12">
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+          What Our <span style={{ color: "#1399c6" }}>Users Say</span>
+        </h2>
+        <p className="text-gray-600 max-w-2xl mx-auto">
+          Don't just take our word for it. Hear from our community of renters and how RentEasy has helped them.
+        </p>
+      </div>
+
+      {/* Scrolling container with infinite animation */}
+      <div className="relative overflow-hidden py-4 mx-auto">
+        <div
+          className="flex space-x-6 testimonial-slider"
+          style={{
+            width: 'max-content',
+          }}
+        >
+          {scrollingTestimonials.map((testimonial, index) => (
+            <div key={index} className="min-w-[300px] max-w-[300px]">
+              <TestimonialCard {...testimonial} />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Add keyframes for animation */}
+      <style jsx>{`
+        .testimonial-slider {
+          animation: scroll 15s linear infinite;
+        }
+        
+        @keyframes scroll {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(calc(-300px * ${testimonials.length} - ${testimonials.length * 24}px));
+          }
+        }
+      `}</style>
+    </section>
+  );
+};
+
+// Footer Component
+const Footer = () => {
+  const navigate = useNavigate();
+  
+  return (
+    <footer className="bg-gray-900 text-white pt-16 pb-8">
+      <div className="container mx-auto px-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Column 1: Logo and About */}
+          <div className="space-y-4">
+            <h2 className="text-2xl font-bold">
+              Rent<span style={{ color: '#1399c6' }}>Easy</span>
+            </h2>
+            <p className="text-gray-400">
+              Simplifying rentals with technology and trust. Your one-stop platform for all rental needs.
+            </p>
+            <div className="flex space-x-4">
+              <a href="#" className="hover:text-rent-light-blue transition-colors duration-200">
+                <Facebook size={20} />
+              </a>
+              <a href="#" className="hover:text-rent-light-blue transition-colors duration-200">
+                <Twitter size={20} />
+              </a>
+              <a href="#" className="hover:text-rent-light-blue transition-colors duration-200">
+                <Instagram size={20} />
+              </a>
+              <a href="#" className="hover:text-rent-light-blue transition-colors duration-200">
+                <Linkedin size={20} />
+              </a>
+            </div>
+          </div>
+          
+          {/* Column 2: Quick Links */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <ul className="space-y-2">
+              <li>
+                <a href="#" className="text-gray-400 hover:text-rent-light-blue transition-colors duration-200">
+                  Home
+                </a>
+              </li>
+              <li>
+                <a href="#about" className="text-gray-400 hover:text-rent-light-blue transition-colors duration-200">
+                  About Us
+                </a>
+              </li>
+              <li>
+                <a href="#categories" className="text-gray-400 hover:text-rent-light-blue transition-colors duration-200">
+                  Categories
+                </a>
+              </li>
+              <li>
+                <a href="#testimonials" className="text-gray-400 hover:text-rent-light-blue transition-colors duration-200">
+                  Testimonials
+                </a>
+              </li>
+            </ul>
+          </div>
+          
+          {/* Column 3: Legal */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Legal</h3>
+            <ul className="space-y-2">
+              <li>
+                <button
+                  className="text-gray-400 hover:text-rent-light-blue transition-colors duration-200"
+                  onClick={() => navigate('/terms')}
+                >
+                  Terms of Service
+                </button>
+              </li>
+              <li>
+                <button
+                  className="text-gray-400 hover:text-rent-light-blue transition-colors duration-200"
+                  onClick={() => navigate('/terms')}
+                >
+                  Privacy Policy
+                </button>
+              </li>
+              <li>
+                <button
+                  className="text-gray-400 hover:text-rent-light-blue transition-colors duration-200"
+                  onClick={() => navigate('/terms')}
+                >
+                  Cookie Policy
+                </button>
+              </li>
+              <li>
+                <button
+                  className="text-gray-400 hover:text-rent-light-blue transition-colors duration-200"
+                  onClick={() => navigate('/terms')}
+                >
+                  Rental Agreement
+                </button>
+              </li>
+            </ul>
+          </div>
+          
+          {/* Column 4: Contact */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
+            <ul className="space-y-3">
+              <li className="flex items-start">
+                <MapPin size={20} className="text-rent-light-blue shrink-0 mr-3 mt-1" />
+                <span className="text-gray-400">
+                  123 Rental Street, Suite 456<br />
+                  Anytown, ST 12345
+                </span>
+              </li>
+              <li className="flex items-center">
+                <Phone size={20} className="text-rent-light-blue shrink-0 mr-3" />
+                <span className="text-gray-400">+1 (555) 123-4567</span>
+              </li>
+              <li className="flex items-center">
+                <Mail size={20} className="text-rent-light-blue shrink-0 mr-3" />
+                <span className="text-gray-400">support@renteasy.com</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <div className="border-t border-gray-800 mt-12 pt-8">
+          <p className="text-gray-500 text-center text-sm">
+            © {new Date().getFullYear()} RentEasy. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+// Main Home Component
+const Home = () => {
+  return (
+    <div className="min-h-screen">
+      {/* <Navbar /> */}
+      <Carousel />
+      <Categories />
+      <Recommendations />
+      <BrandHighlight />
+      <AboutUs />
+      <Testimonials />
+      {/* <HamchaarLogo /> */}
+      <Footer />
+    </div>
+  );
+};
+
+export default Home;
