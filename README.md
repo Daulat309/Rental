@@ -1,4 +1,4 @@
-# RentEasy / Rental Platform
+# RentEasy Platform
 
 RentEasy is a platform that allows users to **list items for rent** and **rent items from others** seamlessly. Whether it's tools, gadgets, or furniture, RentEasy makes the rental process simple and efficient.
 
