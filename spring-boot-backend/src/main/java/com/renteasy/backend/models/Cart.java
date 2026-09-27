@@ -12,5 +12,15 @@ public class Cart {
     @Id
     private String id;
     
-    // TODO: Add fields translated from cart.js
+    private String user; // User ID
+    private List<CartItem> items;
+    
+    private Date createdAt;
+    private Date updatedAt;
+    
+    @Data
+    public static class CartItem {
+        private String product; // Product ID
+        private Integer quantity = 1;
+    }
 }

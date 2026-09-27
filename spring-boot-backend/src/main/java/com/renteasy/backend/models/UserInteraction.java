@@ -12,5 +12,17 @@ public class UserInteraction {
     @Id
     private String id;
     
-    // TODO: Add fields translated from userInteraction.js
+    private String userId;
+    private String productId;
+    
+    // Enum: 'VIEW', 'RENT', 'WISHLIST', 'SEARCH'
+    private String interactionType;
+    
+    private String searchQuery;
+    private Integer rentalDuration;
+    
+    private Date interactionTime = new Date();
+    
+    private Date createdAt;
+    private Date updatedAt;
 }

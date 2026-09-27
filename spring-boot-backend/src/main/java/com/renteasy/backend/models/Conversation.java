@@ -12,5 +12,19 @@ public class Conversation {
     @Id
     private String id;
     
-    // TODO: Add fields translated from conversation.js
+    private List<String> participants; // User IDs
+    private String productId; // Product ID, can be null
+    
+    private LastMessage lastMessage;
+    private java.util.Map<String, Integer> unreadCount; // User ID -> Count
+    
+    private Date createdAt;
+    private Date updatedAt;
+    
+    @Data
+    public static class LastMessage {
+        private String text = "";
+        private String senderId;
+        private Date timestamp = new Date();
+    }
 }

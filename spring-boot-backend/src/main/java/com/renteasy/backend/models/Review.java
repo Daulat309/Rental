@@ -12,5 +12,15 @@ public class Review {
     @Id
     private String id;
     
-    // TODO: Add fields translated from review.js
+    private String product; // Product ID
+    private String user; // User ID
+    
+    private Integer rating;
+    private String comment;
+    private List<String> images;
+    
+    private Boolean isVerifiedRent = false;
+    
+    private Date createdAt;
+    private Date updatedAt;
 }

@@ -12,5 +12,16 @@ public class Message {
     @Id
     private String id;
     
-    // TODO: Add fields translated from message.js
+    private String conversationId;
+    private String senderId;
+    private String receiverId;
+    
+    private String text;
+    private Boolean readStatus = false;
+    
+    // Enum: "text", "image", "system"
+    private String messageType = "text";
+    
+    private Date createdAt;
+    private Date updatedAt;
 }
